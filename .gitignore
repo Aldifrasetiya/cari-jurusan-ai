@@ -1,0 +1,6 @@
+# Abaikan folder cache Python
+__pycache__/
+.venv/
+
+# Abaikan folder lain
+model/

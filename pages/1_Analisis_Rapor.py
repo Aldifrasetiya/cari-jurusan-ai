@@ -301,3 +301,5 @@ else:
             st.rerun()
         else:
             st.error("Kode akses salah. Silakan coba lagi.")
+    
+    KODE_PROMO = st.secrets["KODE_PROMO"]
