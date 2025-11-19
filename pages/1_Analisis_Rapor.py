@@ -222,11 +222,9 @@ else:
     
     if st.button("Buka Fitur 🔓"):
         try:
-            KODE_VALID_PREMIUM = st.secrets["LAUNCH_V1"]
-            KODE_VALID_PROMO = st.secrets["LAUNCH_V1_PROMO"]
 
-            # KODE_VALID_PREMIUM = "L@UNCH_V1"
-            # KODE_VALID_PROMO = "L@UNCH_V1_PROMO"
+            KODE_VALID_PREMIUM = "L@UNCH_V1"
+            KODE_VALID_PROMO = "L@UNCH_V1_PROMO"
             
             # Cek apakah input cocok dengan salah satu kode
             if kode_input == KODE_VALID_PREMIUM or kode_input == KODE_VALID_PROMO:
