@@ -211,7 +211,7 @@ else:
     # Tampilkan tombol besar
     st.link_button("👉 Beli Akses Premium (Chat Admin) 💬", url=LINK_WA, type="primary")
     
-    st.caption("💡 **Harga Promo Launching:** Rp 15.000 (Sekali bayar, akses selamanya!)")
+    st.caption("💡 **Harga Promo Launching:** Rp 19.000 (Sekali bayar, akses selamanya!)")
     
     st.markdown("---")
 
