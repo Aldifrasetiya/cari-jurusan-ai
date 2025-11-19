@@ -9,18 +9,80 @@ st.set_page_config(
     page_icon="🤖"
 )
 
-# --- Konfigurasi Sidebar ---
+QUESTION_BANK = {
+    "logika": [
+        "Saya suka memecahkan teka-teki, puzzle, atau permainan strategi (seperti Catur/Sudoku).",
+        "Ketika menghadapi masalah, saya lebih suka mencari akar penyebabnya secara sistematis.",
+        "Saya penasaran bagaimana cara kerja mesin atau aplikasi komputer di balik layar."
+    ],
+    "verbal": [
+        "Saya sering diminta teman untuk menjelaskan materi pelajaran karena penjelasan saya mudah dimengerti.",
+        "Saya suka membaca buku, artikel, atau menulis cerita/esai di waktu luang.",
+        "Saya merasa percaya diri saat harus berbicara atau presentasi di depan umum."
+    ],
+    "sosial": [
+        "Saya lebih suka bekerja dalam kelompok (tim) daripada bekerja sendirian.",
+        "Teman-teman sering curhat masalah pribadi kepada saya karena saya pendengar yang baik.",
+        "Saya mudah bergaul dan memulai percakapan dengan orang yang baru dikenal."
+    ],
+    "kreatif": [
+        "Saya sering memiliki ide-ide yang dianggap 'unik' atau 'out-of-the-box' oleh orang lain.",
+        "Saya sangat peduli pada estetika, desain, warna, atau tampilan visual suatu benda.",
+        "Saya suka menciptakan sesuatu (menggambar, bermusik, video) daripada sekadar menikmatinya."
+    ],
+    "analitis": [
+        "Saya suka bekerja dengan angka, tabel, dan data statistik.",
+        "Saya adalah orang yang teliti dan memperhatikan detail kecil yang sering dilewatkan orang lain.",
+        "Saya suka menyusun rencana atau jadwal kegiatan secara terperinci."
+    ]
+}
+
+def render_quiz_and_get_scores():
+    """
+    Menampilkan kuesioner di Streamlit dan mengembalikan dictionary skor 0.0 - 1.0
+    """
+    
+    OPTIONS = ["Sangat Tidak Setuju", "Tidak Setuju", "Netral", "Setuju", "Sangat Setuju"]
+
+    MAPPING = {
+        "Sangat Tidak Setuju": 1,
+        "Tidak Setuju": 2,
+        "Netral": 3,
+        "Setuju": 4,
+        "Sangat Setuju": 5
+    }
+    
+    final_scores = {}
+    
+    for category, questions in QUESTION_BANK.items():
+        st.markdown(f"### Bidang: {category.capitalize()}")
+        total_score_category = 0
+        max_score_category = len(questions) * 5
+        
+        for i, q in enumerate(questions):
+            answer = st.select_slider(
+                label=f"{i+1}. {q}",
+                options=OPTIONS,
+                value="Netral", # Default
+                key=f"{category}_{i}"
+            )
+            total_score_category += MAPPING[answer]
+            
+        normalized_score = total_score_category / max_score_category
+        final_scores[category] = normalized_score
+        
+        st.markdown("---")
+
+    return final_scores
+
 
 st.sidebar.title("Cari Jurusan AI 🤖")
 st.sidebar.write("Temukan jurusan kuliah yang paling cocok untukmu.")
 
-# Navigasi akan dibuat otomatis oleh Streamlit
+st.sidebar.markdown("---") 
 
-st.sidebar.markdown("---") # Garis pemisah
-
-# --- Promo Launching & Donasi ---
-st.sidebar.subheader("🎉 Promo Launching (3 Hari!)")
-st.sidebar.info("Fitur 'Analisis Rapor' GRATIS! Gunakan kode: FREETRIAL")
+st.sidebar.subheader("🎉 Promo Launching")
+st.sidebar.info("Fitur 'Analisis Rapor' Premium hanya Rp.19.000!")
 
 st.sidebar.subheader("Dukung Proyek Ini")
 SAWERIA_URL = "https://saweria.co/aldifrasetiya"
@@ -28,83 +90,27 @@ st.sidebar.link_button("Donasi via Saweria ☕", url=SAWERIA_URL)
 
 st.sidebar.image("img/barcode_saweria.png")
 
-# --- END OF SIDEBAR CODE ---
-
-# -------------------------------------------------------------------
-# BAGIAN 2: UI UTAMA STREAMLIT
-# -------------------------------------------------------------------
-
-# Load model
-model = joblib.load("model/model_cari_jurusan_2.pkl")
+model = joblib.load("model/model_cari_jurusan_v1.5.pkl")
 
 st.set_page_config(page_title="Cari Jurusan AI", layout="wide")
 
 st.title("💡 Test Minat & Kemampuan")
-st.write("Isi nilai atau minat kamu di bawah ini, lalu dapatkan jurusan yang paling cocok.")
+st.write("Jawablah pertanyaan berikut sejujur mungkin berdasarkan dirimu.")
 
-# Bagi layout jadi dua kolom
-col1, col2 = st.columns(2)
+scores_input = render_quiz_and_get_scores()
 
-# ======================
-# KIRI: INPUT & ALASAN
-# ======================
-with col1:
-    st.subheader("Masukkan Skor atau Minat Kamu (0.0 - 1.0)")
+if st.button("Lihat Hasil & Rekomendasi Jurusan"):
 
-    logika = st.slider("Kemampuan Logika", 0.0, 1.0, 0.5)
-    verbal = st.slider("Kemampuan Verbal", 0.0, 1.0, 0.5)
-    sosial = st.slider("Kemampuan Sosial", 0.0, 1.0, 0.5)
-    kreatif = st.slider("Kreativitas", 0.0, 1.0, 0.5)
-    analitis = st.slider("Kemampuan Analitis", 0.0, 1.0, 0.5)
-
-    input_data = pd.DataFrame([{
-        'logika': logika,
-        'verbal': verbal,
-        'sosial': sosial,
-        'kreatif': kreatif,
-        'analitis': analitis
-    }])
-
-    if st.button("Lihat Rekomendasi Jurusan"):
-        hasil_pred = model.predict(input_data)[0]
-        probabilitas = model.predict_proba(input_data)[0]
-        daftar_jurusan = model.classes_
-
-        st.success(f"🎯 Jurusan yang paling cocok untuk kamu: **{hasil_pred}**")
-
-        # Bagian alasan di bawah
-        feature_importance = model.feature_importances_
-        fitur_df = pd.DataFrame({
-            'Fitur': ['logika', 'verbal', 'sosial', 'kreatif', 'analitis'],
-            'Pentingnya': feature_importance
-        }).sort_values(by='Pentingnya', ascending=False)
-
-        top_fitur = ", ".join(fitur_df.head(2)['Fitur'])
-        st.info(f"Rekomendasi ini dipengaruhi terutama oleh: {top_fitur}")
-
-        # Simpan variabel global untuk sisi kanan
-        st.session_state['hasil_pred'] = hasil_pred
-        st.session_state['probabilitas'] = probabilitas
-        st.session_state['daftar_jurusan'] = daftar_jurusan
-        st.session_state['fitur_df'] = fitur_df
-
-# ======================
-# KANAN: HASIL & TABEL
-# ======================
-with col2:
-    if 'hasil_pred' in st.session_state:
-        st.subheader("Persentase Kecocokan Tiap Jurusan")
-
-        hasil_pred = st.session_state['hasil_pred']
-        probabilitas = st.session_state['probabilitas']
-        daftar_jurusan = st.session_state['daftar_jurusan']
-        fitur_df = st.session_state['fitur_df']
-
-        for jurusan, prob in zip(daftar_jurusan, probabilitas):
-            persen = round(prob * 100, 2)
-            st.write(f"{jurusan}: {persen}%")
-            st.progress(float(prob))
-
-        st.markdown("---")
-        st.subheader("Detail Bobot Fitur")
-        st.dataframe(fitur_df)
+    input_df = pd.DataFrame([scores_input])
+    target_order = ['logika', 'verbal', 'sosial', 'kreatif', 'analitis']
+    input_to = input_df[target_order]
+    
+    st.subheader("Profil Minat Kamu")
+    st.json(scores_input)
+    
+    prediction = model.predict(input_to)[0]
+    
+    st.success(f"🎯 Rekomendasi Jurusan Utama: **{prediction}**")
+    st.info("Ingat, ini hanya rekomendasi berdasarkan minat dan kemampuan yang kamu isi. "
+            "Pertimbangkan juga faktor lain seperti passion, peluang karir, dan saran dari orang tua/guru.")
+    st.write("Kurang puas dengan hasil dari fitur test minat dan kemampuan? Coba fitur Analisis Rapor!")
