@@ -199,7 +199,7 @@ else:
     with col_step1:
         st.info("**Langkah 1**\n\nKlik tombol Chat Admin di bawah.")
     with col_step2:
-        st.info("**Langkah 2**\n\nLakukan pembayaran (Rp 15.000).")
+        st.info("**Langkah 2**\n\nLakukan pembayaran (Rp 19.000).")
     with col_step3:
         st.info("**Langkah 3**\n\nDapatkan **Kode Akses** via chat.")
         
