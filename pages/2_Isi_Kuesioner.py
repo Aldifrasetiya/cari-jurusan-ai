@@ -5,6 +5,61 @@ st.set_page_config(
     page_icon="📝"
 )
 
+st.markdown("""
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+    html, body, [class*="css"]  {
+        font-family: 'Poppins', sans-serif;
+    }
+
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    .stDeployButton {display:none;}
+
+    div.stButton > button:first-child {
+        background-color: #2ecc71;
+        color: white;
+        font-weight: 600;
+        border-radius: 12px;
+        border: none;
+        padding: 12px 24px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        transition: all 0.3s ease;
+    }
+    
+    div.stButton > button:first-child:hover {
+        background-color: #27ae60;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+    }
+    
+    [data-testid="stSidebar"] h1 {
+        color: #ffffff;
+        font-size: 24px;
+    }
+
+    div.stSlider > div[data-baseweb = "slider"] > div > div {
+        background-color: #2ecc71 !important;
+    }
+            
+    h1 {
+        background: -webkit-linear-gradient(45deg, #00C9FF, #92FE9D); /* Efek Gradasi */
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-weight: 800;
+        margin-bottom: 30px;
+    }
+    
+    div.stInfo, div.stSuccess, div.stWarning {
+        border-radius: 10px;
+        border: none;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    </style>
+    """, unsafe_allow_html=True)
+
 st.sidebar.title("Cari Jurusan AI 🤖")
 st.sidebar.write("Temukan jurusan kuliah yang paling cocok untukmu.")
 
