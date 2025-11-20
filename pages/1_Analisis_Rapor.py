@@ -199,7 +199,7 @@ else:
     with col_step1:
         st.info("**Langkah 1**\n\nKlik tombol Chat Admin di bawah.")
     with col_step2:
-        st.info("**Langkah 2**\n\nLakukan pembayaran (Rp 15.000).")
+        st.info("**Langkah 2**\n\nLakukan pembayaran (Rp 19.000).")
     with col_step3:
         st.info("**Langkah 3**\n\nDapatkan **Kode Akses** via chat.")
         
@@ -223,8 +223,8 @@ else:
     if st.button("Buka Fitur 🔓"):
         try:
 
-            KODE_VALID_PREMIUM = "L@UNCH_V1"
-            KODE_VALID_PROMO = "L@UNCH_V1_PROMO"
+            KODE_VALID_PREMIUM = st.secrets["KODE_PREMIUM"]
+            KODE_VALID_PROMO = st.secrets["KODE_PROMO"]
             
             # Cek apakah input cocok dengan salah satu kode
             if kode_input == KODE_VALID_PREMIUM or kode_input == KODE_VALID_PROMO:
